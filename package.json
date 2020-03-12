@@ -1,7 +1,7 @@
 {
   "name": "passport-login",
   "version": "1.0.0",
-  "description": "Bolier plate for local passport login system.",
+  "description": "Local passport login system bolier plate for future applications.",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
