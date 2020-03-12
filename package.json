@@ -1,15 +1,15 @@
 {
   "name": "passport-login",
   "version": "1.0.0",
-  "description": "",
+  "description": "Bolier plate for local passport login system.",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
     "lint": "eslint ."
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Dominik Tabak",
+  "license": "MIT",
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.12.1",
     "bcryptjs": "^2.4.3",
