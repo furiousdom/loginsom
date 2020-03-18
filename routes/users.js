@@ -5,6 +5,12 @@ const passport = require('passport');
 
 const User = require('../models/User');
 
+const msg = {
+  fillFields: 'Please fill all fields.',
+  failedMatch: 'Passwords don\'t match.',
+  short: 'Password should be at least 8 characters.'
+};
+
 router.get('/login', (req, res) => res.render('login'));
 router.get('/register', (req, res) => res.render('register'));
 
@@ -13,17 +19,11 @@ router.post('/register', (req, res) => {
   // eslint-disable-next-line prefer-const
   let errors = [];
 
-  if (!name || !email || !password || !password2) {
-    errors.push({ msg: 'Please fill all fields.' });
-  }
+  if (!name || !email || !password || !password2) errors.push(msg.fillFields);
 
-  if (password !== password2) {
-    errors.push({ msg: 'Passwords don\'t match.' });
-  }
+  if (password !== password2) errors.push(msg.failedMatch);
 
-  if (password.length < 8) {
-    errors.push({ msg: 'Password should be at least 8 characters.' });
-  }
+  if (password.length < 8) errors.push(msg.short);
 
   if (errors.length > 0) {
     res.render('register', {
@@ -34,7 +34,7 @@ router.post('/register', (req, res) => {
       password2
     });
   } else {
-    User.findOne({ email: email })
+    return User.findOne({ email: email })
       .then(user => {
         if (user) {
           errors.push({ msg: 'User already exists.' });

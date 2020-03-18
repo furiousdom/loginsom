@@ -3,36 +3,35 @@ const bcrypt = require('bcryptjs');
 
 const User = require('../models/User');
 
-module.exports = (passport) => {
-  passport.use(
-    new LocalStrategy({ usernameField: 'email' }, (email, password, done) => {
-      User.findOne({ email: email })
-        .then(user => {
-          if (!user) {
-            return done(null, false, { message: 'That email is not registered.' });
-          }
+const msg = {
+  wrongPassword: 'Password incorrect.',
+  notRegistered: 'That email is not registered.'
+};
 
-          bcrypt.compare(password, user.password, (err, isMatch) => {
-            if (err) throw err;
+const authenticateUser = (email, password, done) => {
+  return User.findOne({ email: email })
+    .then(user => {
+      if (!user) return done(null, false, msg.notRegistered);
 
-            if (isMatch) {
-              return done(null, user);
-            } else {
-              return done(null, false, { message: 'Password incorrect.' });
-            }
-          });
-        })
-        .catch(err => console.log(err));
+      bcrypt.compare(password, user.password, (err, isMatch) => {
+        if (err) throw err;
+
+        if (isMatch) {
+          return done(null, user);
+        } else {
+          return done(null, false, msg.wrongPassword);
+        }
+      });
     })
-  );
+    .catch(err => done(err));
+};
 
-  passport.serializeUser((user, done) => {
-    done(null, user.id);
-  });
+module.exports = (passport) => {
+  passport.use(new LocalStrategy({ usernameField: 'email' }, authenticateUser));
+
+  passport.serializeUser((user, done) => done(null, user.id));
 
   passport.deserializeUser((id, done) => {
-    User.findById(id, (err, user) => {
-      done(err, user);
-    });
+    return User.findById(id, (err, user) => done(err, user));
   });
 };
