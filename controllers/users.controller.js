@@ -29,26 +29,21 @@ function register(req, res) {
 
   if (password.length < 8) errors.push(msg.short);
 
-  if (errors.length > 0) {
-    res.render('register', {
-      errors,
-      name,
-      email,
-      password,
-      password2
-    });
-  } else {
+  const payload = {
+    errors,
+    name,
+    email,
+    password,
+    password2
+  };
+
+  if (errors.length > 0) res.render('register', payload);
+  else {
     return User.findOne({ email })
       .then(user => {
         if (user) {
           errors.push(msg.exists);
-          res.render('register', {
-            errors,
-            name,
-            email,
-            password,
-            password2
-          });
+          res.render('register', payload);
         } else {
           const newUser = new User({
             name,

@@ -11,7 +11,6 @@ function verifyLocal(email, password, done) {
   return User.findOne({ email })
     .then(user => {
       if (!user) return done(null, false, msg.notRegistered);
-
       return user.authenticate(password)
         ? done(null, user)
         : done(null, false, msg.wrongPassword);
