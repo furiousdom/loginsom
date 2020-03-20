@@ -1,4 +1,3 @@
-const bcrypt = require('bcryptjs');
 const passport = require('passport');
 
 const User = require('../models/User');
@@ -19,22 +18,24 @@ const msg = {
 };
 
 function register(req, res) {
-  const { name, email, password, password2 } = req.body;
+  const { name, email, password, rePassword } = req.body;
   // eslint-disable-next-line prefer-const
   let errors = [];
 
-  if (!name || !email || !password || !password2) errors.push(msg.fillFields);
+  if (!name || !email || !password || !rePassword) errors.push(msg.fillFields);
 
-  if (password !== password2) errors.push(msg.failedMatch);
+  if (password !== rePassword) errors.push(msg.failedMatch);
 
   if (password.length < 8) errors.push(msg.short);
+
+  console.log(errors);
 
   const payload = {
     errors,
     name,
     email,
     password,
-    password2
+    rePassword
   };
 
   if (errors.length > 0) res.render('register', payload);
@@ -51,18 +52,13 @@ function register(req, res) {
             password
           });
 
-          // eslint-disable-next-line handle-callback-err
-          bcrypt.genSalt(10, (err, salt) =>
-            bcrypt.hash(newUser.password, salt, (err, hash) => {
-              if (err) throw err;
-              newUser.password = hash;
-              newUser.save()
-                .then(user => {
-                  req.flash(msg.regComplete.label, msg.regComplete.text);
-                  res.redirect('/users/login');
-                })
-                .catch(err => console.log(err));
-            }));
+          newUser.encrypt();
+          newUser.save()
+            .then(user => {
+              req.flash(msg.regComplete.label, msg.regComplete.text);
+              res.redirect('/users/login');
+            })
+            .catch(err => console.log(err));
         }
       });
   }

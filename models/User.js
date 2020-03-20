@@ -25,6 +25,15 @@ UserSchema.methods.authenticate = function (password) {
     .then(isMatch => isMatch ? this : false);
 };
 
+UserSchema.methods.encrypt = function () {
+  // eslint-disable-next-line handle-callback-err
+  bcrypt.genSalt(10, (err, salt) =>
+    bcrypt.hash(this.password, salt, (err, hash) => {
+      if (err) throw err;
+      this.password = hash;
+    }));
+};
+
 const User = mongoose.model('User', UserSchema);
 
 module.exports = User;
