@@ -28,8 +28,6 @@ function register(req, res) {
 
   if (password.length < 8) errors.push(msg.short);
 
-  console.log(errors);
-
   const payload = {
     errors,
     name,
