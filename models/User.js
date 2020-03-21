@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
+const SALT = bcrypt.genSaltSync(10);
+
 const UserSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -25,13 +27,11 @@ UserSchema.methods.authenticate = function (password) {
     .then(isMatch => isMatch ? this : false);
 };
 
-UserSchema.methods.encrypt = function () {
-  // eslint-disable-next-line handle-callback-err
-  bcrypt.genSalt(10, (err, salt) =>
-    bcrypt.hash(this.password, salt, (err, hash) => {
-      if (err) throw err;
-      this.password = hash;
-    }));
+const encrypt = password => bcrypt.hash(password, SALT);
+
+UserSchema.methods.encryptPassword = async function () {
+  this.password = await encrypt(this.password);
+  return this.save();
 };
 
 const User = mongoose.model('User', UserSchema);

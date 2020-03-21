@@ -17,10 +17,8 @@ const msg = {
   }
 };
 
-function register(req, res) {
-  const { name, email, password, rePassword } = req.body;
-  // eslint-disable-next-line prefer-const
-  let errors = [];
+function errorHandler({ name, email, password, rePassword }) {
+  const errors = [];
 
   if (!name || !email || !password || !rePassword) errors.push(msg.fillFields);
 
@@ -28,20 +26,25 @@ function register(req, res) {
 
   if (password.length < 8) errors.push(msg.short);
 
-  const payload = {
+  return {
     errors,
     name,
     email,
     password,
     rePassword
   };
+}
 
-  if (errors.length > 0) res.render('register', payload);
+function register(req, res) {
+  const payload = errorHandler(req.body);
+
+  if (payload.errors.length > 0) res.render('register', payload);
   else {
+    const { name, email, password } = payload;
     return User.findOne({ email })
       .then(user => {
         if (user) {
-          errors.push(msg.exists);
+          payload.errors.push(msg.exists);
           res.render('register', payload);
         } else {
           const newUser = new User({
@@ -50,8 +53,7 @@ function register(req, res) {
             password
           });
 
-          newUser.encrypt();
-          newUser.save()
+          newUser.encryptPassword()
             .then(user => {
               req.flash(msg.regComplete.label, msg.regComplete.text);
               res.redirect('/users/login');
