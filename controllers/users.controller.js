@@ -1,67 +1,26 @@
 const passport = require('passport');
 
 const User = require('../models/User');
-
-const msg = {
-  fillFields: 'Please fill all fields.',
-  failedMatch: 'Passwords don\'t match.',
-  short: 'Password should be at least 8 characters.',
-  exists: 'User already exists.',
-  regComplete: {
-    label: 'success_msg',
-    text: 'You are now registered and can log in.'
-  },
-  logoutComplete: {
-    label: 'success_msg',
-    text: 'You are logged out.'
-  }
-};
-
-function errorHandler({ name, email, password, rePassword }) {
-  const errors = [];
-
-  if (!name || !email || !password || !rePassword) errors.push(msg.fillFields);
-
-  if (password !== rePassword) errors.push(msg.failedMatch);
-
-  if (password.length < 8) errors.push(msg.short);
-
-  return {
-    errors,
-    name,
-    email,
-    password,
-    rePassword
-  };
-}
+const msg = require('../config/messages');
 
 function register(req, res) {
-  const payload = errorHandler(req.body);
-
-  if (payload.errors.length > 0) res.render('register', payload);
-  else {
-    const { name, email, password } = payload;
-    return User.findOne({ email })
-      .then(user => {
-        if (user) {
-          payload.errors.push(msg.exists);
-          res.render('register', payload);
-        } else {
-          const newUser = new User({
-            name,
-            email,
-            password
-          });
-
-          newUser.encryptPassword()
-            .then(user => {
-              req.flash(msg.regComplete.label, msg.regComplete.text);
-              res.redirect('/users/login');
-            })
-            .catch(err => console.log(err));
-        }
-      });
-  }
+  const { errors, body: { name, email, password, rePassword } } = req;
+  const payload = { errors, name, email, password, rePassword };
+  if (errors.length > 0) return res.render('register', payload);
+  return User.findOne({ email })
+    .then(user => {
+      if (user) {
+        payload.errors.push(msg.exists);
+        return res.render('register', payload);
+      }
+      const newUser = new User({ name, email, password });
+      return newUser.encryptPassword()
+        .then(() => {
+          req.flash(msg.regComplete.label, msg.regComplete.text);
+          res.redirect('/users/login');
+        })
+        .catch(err => console.log(err));
+    });
 }
 
 function login(req, res, next) {

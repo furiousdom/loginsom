@@ -1,11 +1,7 @@
 const LocalStrategy = require('passport-local');
 
 const User = require('../models/User');
-
-const msg = {
-  wrongPassword: 'Password incorrect.',
-  notRegistered: 'That email is not registered.'
-};
+const msg = require('../config/messages');
 
 function verifyLocal(email, password, done) {
   return User.findOne({ email })
