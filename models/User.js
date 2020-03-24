@@ -1,4 +1,7 @@
+const bcrypt = require('bcryptjs');
 const mongoose = require('mongoose');
+
+const SALT = bcrypt.genSaltSync(10);
 
 const UserSchema = new mongoose.Schema({
   name: {
@@ -18,6 +21,18 @@ const UserSchema = new mongoose.Schema({
     default: Date.now
   }
 });
+
+UserSchema.methods.authenticate = function (password) {
+  return bcrypt.compare(password, this.password)
+    .then(isMatch => isMatch ? this : false);
+};
+
+const encrypt = password => bcrypt.hash(password, SALT);
+
+UserSchema.methods.encryptPassword = async function () {
+  this.password = await encrypt(this.password);
+  return this.save();
+};
 
 const User = mongoose.model('User', UserSchema);
 

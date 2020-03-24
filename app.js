@@ -1,17 +1,21 @@
 const express = require('express');
 const expressLayouts = require('express-ejs-layouts');
-const mongoose = require('mongoose');
 const flash = require('connect-flash');
-const session = require('express-session');
+const mongoose = require('mongoose');
 const passport = require('passport');
+const session = require('express-session');
 
 const app = express();
 
 require('./config/passport')(passport);
 
 const db = require('./config/keys').MongoURI;
+const dbConfig = {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+};
 
-mongoose.connect(db, { useNewUrlParser: true })
+mongoose.connect(db, dbConfig)
   .then(() => console.log('MongoDB Connected...'))
   .catch(err => console.log(err));
 
