@@ -1,12 +1,10 @@
-const passport = require('passport');
-
 const User = require('../models/User');
 const msg = require('../config/messages');
 
-function register(req, res) {
+function register(req, res, next) {
   const { errors, body: { name, email, password, rePassword } } = req;
   const payload = { errors, name, email, password, rePassword };
-  if (errors.length > 0) return res.render('register', payload);
+  if (errors.length) return res.render('register', payload);
   return User.findOne({ email })
     .then(user => {
       if (user) {
@@ -19,16 +17,8 @@ function register(req, res) {
           req.flash(msg.regComplete.label, msg.regComplete.text);
           res.redirect('/users/login');
         })
-        .catch(err => console.log(err));
+        .catch(err => next(err));
     });
-}
-
-function login(req, res, next) {
-  passport.authenticate('local', {
-    successRedirect: '/dashboard',
-    failureRedirect: '/users/login',
-    failureFlash: true
-  })(req, res, next);
 }
 
 function logout(req, res) {
@@ -37,4 +27,4 @@ function logout(req, res) {
   res.redirect('/users/login');
 }
 
-module.exports = { register, login, logout };
+module.exports = { register, logout };

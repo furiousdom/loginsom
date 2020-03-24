@@ -14,11 +14,9 @@ function verifyLocal(email, password, done) {
     .catch(err => done(err));
 }
 
-module.exports = (passport) => {
+module.exports = passport => {
   passport.use(new LocalStrategy({ usernameField: 'email' }, verifyLocal));
-
   passport.serializeUser((user, done) => done(null, user.id));
-
   passport.deserializeUser((id, done) => {
     return User.findById(id, (err, user) => done(err, user));
   });
