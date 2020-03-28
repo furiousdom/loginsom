@@ -1,12 +1,12 @@
-# loginsom
+# logmein
 
 <!--- These are examples. See https://shields.io for others or to customize this set of shields. You might want to include dependencies, project status and licence info here --->
-![GitHub repo size](https://img.shields.io/github/repo-size/furiousdom/loginsom)
-![GitHub contributors](https://img.shields.io/github/contributors/furiousdom/loginsom)
-![GitHub stars](https://img.shields.io/github/stars/furiousdom/loginsom?style=social)
-![GitHub forks](https://img.shields.io/github/forks/furiousdom/loginsom?style=social)
+![GitHub repo size](https://img.shields.io/github/repo-size/furiousdom/logmein)
+![GitHub contributors](https://img.shields.io/github/contributors/furiousdom/logmein)
+![GitHub stars](https://img.shields.io/github/stars/furiousdom/logmein?style=social)
+![GitHub forks](https://img.shields.io/github/forks/furiousdom/logmein?style=social)
 
-loginsom is a login system based on local passport authentication that manages user `registration` and `login` options. It shows a dashboard from which a user can only `logout` as this project is meant as an addition to other projects.
+logmein is a login system based on local passport authentication that manages user `registration` and `login` options. It shows a dashboard from which a user can only `logout` as this project is meant as an addition to other projects.
 
 ## Prerequisites
 
@@ -18,18 +18,18 @@ Before you begin, ensure you have met the following requirements:
 
 ## Installation
 
-To install loginsom, follow these steps:
+To install logmein, follow these steps:
 
 Windows:
 
 1. Open `cmd` or `PowerShell` and run command:
 ```
-git clone https://github.com/furiousdom/loginsom.git
+git clone https://github.com/furiousdom/logmein.git
 ```
 
 2. Change to project directory:
 ```
-cd loginsom
+cd logmein
 ```
 
 3. Install all dependencies:
@@ -37,18 +37,18 @@ cd loginsom
 npm install
 ```
 
-## Using loginsom
+## Using logmein
 
-To test loginsom, run:
+To test logmein, run:
 
 ```
 npm run dev
 ```
 
-If you want to use the login system in your projects you may do so but you need to combine the two projects on your own since incorporating loginsom to other projects depends from project to project.
+If you want to use the login system in your projects you may do so but you need to combine the two projects on your own since incorporating logmein to other projects depends from project to project.
 
-## Contributing to loginsom
-To contribute to loginsom please leave suggestions by creating pull requests.
+## Contributing to logmein
+To contribute to logmein please leave suggestions by creating pull requests.
 
 You can see the GitHub documentation on [creating a pull request](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request).
 
