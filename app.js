@@ -1,3 +1,4 @@
+const { MongoURI, dbName } = require('./config/keys');
 const express = require('express');
 const expressLayouts = require('express-ejs-layouts');
 const flash = require('connect-flash');
@@ -9,8 +10,9 @@ const app = express();
 
 require('./config/passport')(passport);
 
-const db = require('./config/keys').MongoURI;
+const db = MongoURI;
 const dbConfig = {
+  dbName,
   useNewUrlParser: true,
   useUnifiedTopology: true
 };
